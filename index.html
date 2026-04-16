@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seznam Cílení – Největší lokální digitální ekosystém v ČR</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-inner">
+        <div class="header-left">
+            <button class="hamburger" aria-label="Menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <a href="#" class="logo" aria-label="Seznam.cz">
+                <img src="logo-seznam.svg" alt="Seznam.cz" width="153" height="32">
+            </a>
+            <div class="breadcrumb">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M4.5 3l3 3-3 3" stroke="#677888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Cílení</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <span class="flag" aria-label="Čeština">
+                <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <clipPath id="flagClip"><circle cx="12" cy="12" r="11"/></clipPath>
+                    </defs>
+                    <g clip-path="url(#flagClip)">
+                        <rect width="24" height="12" fill="#fff"/>
+                        <rect y="12" width="24" height="12" fill="#D7141A"/>
+                        <path d="M0 0l12 12L0 24z" fill="#11457E"/>
+                    </g>
+                    <circle cx="12" cy="12" r="10.5" fill="none" stroke="#ddd"/>
+                </svg>
+            </span>
+            <button class="icon-btn" aria-label="Hledat">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+                    <path d="M20 20l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+</header>
+
+<main>
+
+    <!-- HERO + NUMBERS BG -->
+    <section class="hero-block animate-section">
+        <div class="hero-bg">
+            <div class="hero-glow"></div>
+            <svg class="net-anim net-anim-hero" viewBox="0 0 1114 627" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
+        </div>
+        <div class="container">
+            <div class="hero">
+                <h1 class="hero-title">
+                    Největší lokální<br>
+                    <span class="hero-title-accent">digitální ekosystém</span><br>
+                    v České republice
+                </h1>
+                <p class="hero-text">Na základě 1st party dat přináší přehled o českém online publiku, jeho zájmech a chování. Pomáhá efektivněji plánovat kampaně a dosahovat lepších výsledků.</p>
+                <a href="#" class="btn btn-primary">Více o cílení</a>
+            </div>
+
+            <section class="numbers animate-section" id="numbers">
+                <div class="number-card">
+                    <div class="number-icon">
+                        <img src="7mil.svg" alt="" width="56" height="56">
+                    </div>
+                    <div class="number-content">
+                        <div class="number-value">
+                            <span class="counter" data-target="7.6" data-decimals="1" data-format="cs">0</span>
+                            <span class="number-suffix">mil.</span>
+                        </div>
+                        <p class="number-label">reálných uživatelů za měsíc (zásah, který pokrývá téměř celou českou online populaci)</p>
+                    </div>
+                </div>
+
+                <div class="number-card">
+                    <div class="number-icon">
+                        <img src="80proc.svg" alt="" width="56" height="56">
+                    </div>
+                    <div class="number-content">
+                        <div class="number-value">
+                            <span class="counter" data-target="80" data-decimals="0">0</span>
+                            <span class="number-suffix">%</span>
+                        </div>
+                        <p class="number-label">přihlášených uživatelů (vysoký podíl ověřených identit pro kvalitnější cílení)</p>
+                    </div>
+                </div>
+
+                <div class="number-card">
+                    <div class="number-icon">
+                        <img src="3bil.svg" alt="" width="56" height="56">
+                    </div>
+                    <div class="number-content">
+                        <div class="number-value">
+                            <span class="counter" data-target="3.8" data-decimals="1" data-format="cs">0</span>
+                            <span class="number-suffix">mld.</span>
+                        </div>
+                        <p class="number-label">zobrazení stránek za měsíc (rozsáhlý objem dat pro přesnější porozumění publiku)</p>
+                    </div>
+                </div>
+
+                <div class="number-card">
+                    <div class="number-icon">
+                        <img src="4000.svg" alt="" width="56" height="56">
+                    </div>
+                    <div class="number-content">
+                        <div class="number-value">
+                            <span class="counter" data-target="4000" data-decimals="0" data-format="space">0</span>
+                            <span class="number-suffix">+</span>
+                        </div>
+                        <p class="number-label">segmentů (široké možnosti zacílení pro relevantnější zásah kampaní)</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </section>
+
+    <!-- GRAFY -->
+    <section class="charts-section animate-section" id="charts">
+        <div class="charts-bg">
+            <svg class="net-anim net-anim-charts" viewBox="0 0 1114 627" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
+        </div>
+        <div class="container">
+            <h2 class="section-title">Vyberte si, jak chcete cílit</h2>
+            <div class="charts-grid">
+                <div class="chart-card chart-donut-card">
+                    <h3 class="chart-title">Podle pohlaví</h3>
+                    <div class="donut-wrap">
+                        <svg class="donut" viewBox="0 0 240 240" aria-hidden="true">
+                            <circle cx="120" cy="120" r="92" fill="none" stroke="#FF1E1E" stroke-width="40"></circle>
+                            <circle class="donut-arc" cx="120" cy="120" r="92" fill="none" stroke="#3D32D6" stroke-width="40"
+                                    stroke-dasharray="578" stroke-dashoffset="578"
+                                    data-final-offset="263" transform="rotate(-90 120 120)"></circle>
+                        </svg>
+                        <div class="donut-center">
+                            <img src="woman.svg" alt="" class="donut-icon donut-icon-woman">
+                            <img src="men.svg" alt="" class="donut-icon donut-icon-man">
+                        </div>
+                    </div>
+                    <div class="donut-legend">
+                        <div class="legend-item">
+                            <div class="legend-value">45,54 %</div>
+                            <div class="legend-label">Ženy</div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-value">54,45 %</div>
+                            <div class="legend-label">Muži</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card chart-bars-card">
+                    <h3 class="chart-title">Podle vzdělání</h3>
+                    <div class="bars-container">
+                        <div class="bar-wrap">
+                            <div class="bar-area">
+                                <div class="bar bar-1" data-height="256" style="--bar-color: #FF1E1E;">
+                                    <span class="bar-value">53,84 %</span>
+                                </div>
+                            </div>
+                            <div class="bar-label">Středoškolské<br>s maturitou</div>
+                        </div>
+                        <div class="bar-wrap">
+                            <div class="bar-area">
+                                <div class="bar bar-2" data-height="96" style="--bar-color: #B11414;">
+                                    <span class="bar-value">26,86 %</span>
+                                </div>
+                            </div>
+                            <div class="bar-label">Vysokoškolské</div>
+                        </div>
+                        <div class="bar-wrap">
+                            <div class="bar-area">
+                                <div class="bar bar-3" data-height="76" style="--bar-color: #6E0E0E;">
+                                    <span class="bar-value">19,29 %</span>
+                                </div>
+                            </div>
+                            <div class="bar-label">Vyučen(a) bez<br>maturity</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card chart-people-card">
+                    <h3 class="chart-title">Podle věku</h3>
+                    <div class="people-grid">
+                        <div class="people-col" data-icons="43" data-cols="7">
+                            <div class="people-icons" data-rows="6" data-extra="1"></div>
+                            <div class="people-stat">
+                                <div class="people-value">43,23 %</div>
+                                <div class="people-label">10–59 let</div>
+                            </div>
+                        </div>
+                        <div class="people-col" data-icons="25" data-cols="7">
+                            <div class="people-icons" data-rows="3" data-extra="4"></div>
+                            <div class="people-stat">
+                                <div class="people-value">25,43 %</div>
+                                <div class="people-label">25–39 let</div>
+                            </div>
+                        </div>
+                        <div class="people-col" data-icons="24" data-cols="7">
+                            <div class="people-icons" data-rows="3" data-extra="3"></div>
+                            <div class="people-stat">
+                                <div class="people-value">24,34 %</div>
+                                <div class="people-label">60 a více let</div>
+                            </div>
+                        </div>
+                        <div class="people-col" data-icons="1" data-cols="1">
+                            <div class="people-icons people-tiny"></div>
+                            <div class="people-stat">
+                                <div class="people-value">0,56 %</div>
+                                <div class="people-label">18–24 let</div>
+                            </div>
+                        </div>
+                        <div class="people-col" data-icons="1" data-cols="1">
+                            <div class="people-icons people-tiny people-tinier"></div>
+                            <div class="people-stat">
+                                <div class="people-value">0,13 %</div>
+                                <div class="people-label">17 a méně let</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TILES -->
+    <section class="tiles-section animate-section">
+        <div class="tiles-bg">
+            <svg class="net-anim net-anim-tiles" viewBox="0 0 1114 627" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
+        </div>
+        <div class="container">
+            <h2 class="section-title section-title-center">Stačí zvolit segment cílení</h2>
+            <div class="tabs">
+                <button class="tab active" data-tab="zajmy">Zájmy</button>
+                <button class="tab" data-tab="nakupni">Nákupní chování</button>
+            </div>
+            <div class="tiles-grid">
+                <article class="tile">
+                    <h4 class="tile-title">Zájemci o koupi nového auta</h4>
+                    <p class="tile-text">Publikum aktivně zvažuje nákup osobního auta (včetně EV/SUV) a zároveň řeší praktické doplňky jako pneumatiky, disky nebo vybavení do vozu.</p>
+                </article>
+                <article class="tile">
+                    <h4 class="tile-title">Řidiči řešící servis vozidla</h4>
+                    <p class="tile-text">Uživatelé se silným zájmem o servis a údržbu auta, kteří nakupují klíčové díly a provozní materiál (baterie, oleje, brzdy, autodíly).</p>
+                </article>
+                <article class="tile">
+                    <h4 class="tile-title">Zájemci o renovaci bydlení</h4>
+                    <p class="tile-text">Lidé ve fázi rekonstrukce bydlení, kteří kombinují zájem o stavební práce a řemeslné služby s nákupy vybavení koupelny, podlah, oken a dveří.</p>
+                </article>
+                <article class="tile">
+                    <h4 class="tile-title">Cestovatelé mířící k moři a do zahraničí</h4>
+                    <p class="tile-text">Cestovatelsky orientované publikum plánující dovolenou u moře nebo poznávací cesty, s nákupním chováním kolem kufrů, plavek a letní výbavy.</p>
+                </article>
+                <article class="tile">
+                    <h4 class="tile-title">Lyžaři plánující horskou dovolenou</h4>
+                    <p class="tile-text">Skupina plánující zimní horskou dovolenou s přespáváním, která vykazuje silný nákupní intent na lyžařské a snowboardové vybavení včetně spacáků a karimatek.</p>
+                </article>
+                <article class="tile">
+                    <h4 class="tile-title">Outdoor a camping nadšenci</h4>
+                    <p class="tile-text">Publikum preferující tuzemské cestování a outdoor, které nakupuje kempingové vybavení jako stany, spacáky a turistické batohy.</p>
+                </article>
+            </div>
+            <div class="tiles-cta">
+                <button class="btn btn-secondary">
+                    Zobrazit více
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- BLOG CAROUSEL -->
+    <section class="blog-section animate-section">
+        <div class="container">
+            <div class="blog-header">
+                <h2 class="section-title">Přečtěte si k tématu</h2>
+                <div class="carousel-controls">
+                    <button class="carousel-btn" id="blogPrev" aria-label="Předchozí">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M10 4l-4 4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="carousel-dots" id="blogDots"></div>
+                    <button class="carousel-btn" id="blogNext" aria-label="Další">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="carousel" id="blogCarousel">
+                <div class="carousel-track">
+                    <article class="blog-card">
+                        <h4 class="blog-title">Czech ad ID: Rozšiřujeme nový standard pro spolehlivé a efektivní cílení v RTB</h4>
+                        <div class="blog-date">15. května 2026</div>
+                        <p class="blog-text">Svět programatického nákupu se stále mění a náš přístup s ním. Abychom inzerentům i nadále umožnili kvalitní cílení a ještě přesnější měření kampaní v RTB a zároveň respekt k soukromí uživatelů, přecházíme s kompletní …</p>
+                    </article>
+                    <article class="blog-card">
+                        <h4 class="blog-title">Objevte sílu vlastních dat díky Raynet CRM a integrátoru Boost.space</h4>
+                        <div class="blog-date">5. dubna 2026</div>
+                        <p class="blog-text">Kdo chce dnes uspět v online marketingu, ten v kampaních sází na vlastní 1st party data. Pokud je chcete v Skliku naplno využít i vy, díky přímému propojení Raynet CRM a integrátoru Boost.space to zvládnete raz dva. Tak zapomeňte na složitou …</p>
+                    </article>
+                    <article class="blog-card">
+                        <h4 class="blog-title">Přihlášení na jedno kliknutí: Proč jsme dali zelenou FedCM?</h4>
+                        <div class="blog-date">2. února 2026</div>
+                        <p class="blog-text">V Seznamu dlouhodobě usilujeme o to, aby naši uživatelé měli jistotu, že jsou jejich osobní údaje v bezpečí. Zároveň chceme, aby pro ně používání našich služeb bylo co nejkomfortnější. Proto jsme se rozhodli nasadit moderní řešení Federated Credential …</p>
+                    </article>
+                    <article class="blog-card">
+                        <h4 class="blog-title">Nové možnosti cílení v Skliku: Více dat, lepší výsledky</h4>
+                        <div class="blog-date">10. ledna 2026</div>
+                        <p class="blog-text">Sklik posiluje nabídku cílení o nové segmenty postavené na 1st party datech celého ekosystému Seznam. Inzerenti tak získají nástroj pro přesnější oslovování uživatelů s vyšší pravděpodobností konverze a kvalitnějšími daty …</p>
+                    </article>
+                    <article class="blog-card">
+                        <h4 class="blog-title">Trendy v digitálním marketingu pro rok 2026</h4>
+                        <div class="blog-date">20. prosince 2025</div>
+                        <p class="blog-text">Co bude hýbat online světem v nadcházejícím roce? AI v reklamě, růst videoobsahu, důraz na ochranu soukromí a vlastní data. Připravili jsme přehled nejdůležitějších trendů, které byste měli sledovat …</p>
+                    </article>
+                    <article class="blog-card">
+                        <h4 class="blog-title">Případová studie: Jak značka XY zvýšila konverze o 40 %</h4>
+                        <div class="blog-date">15. listopadu 2025</div>
+                        <p class="blog-text">Podívejte se, jak chytré využití cílení podle nákupního chování pomohlo retailové značce výrazně zvednout výkon kampaně. Sledování chování uživatelů a relevantní obsah jsou klíč k úspěchu …</p>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-section animate-section">
+        <div class="container container-narrow">
+            <h2 class="section-title">Nejčastější dotazy</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-toggle" aria-expanded="false">
+                        <span>Jak Seznam uživatelská data, která se využívají pro cílení, získává?</span>
+                        <svg class="faq-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M8 4v8M4 8l4 4 4-4" stroke="#FF1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-content">
+                        <p>Data získáváme z přihlášených účtů našich služeb (Email.cz, Seznam Zprávy, Mapy.cz, Sreality a další). Vše probíhá v souladu s GDPR a uživatelé mají plnou kontrolu nad svými preferencemi.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-toggle" aria-expanded="false">
+                        <span>Kdy se vyplatí cílit na data Seznamu?</span>
+                        <svg class="faq-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M8 4v8M4 8l4 4 4-4" stroke="#FF1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-content">
+                        <p>Pokud chcete oslovit českou online populaci s vysokou přesností, využít 1st party data a maximalizovat výkon kampaní napříč celým ekosystémem.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-toggle" aria-expanded="false">
+                        <span>Pro jaké obory se cílení na data Seznamu hodí?</span>
+                        <svg class="faq-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <path d="M8 4v8M4 8l4 4 4-4" stroke="#FF1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="faq-content">
+                        <p>Prakticky pro všechny obory – e-commerce, finance, automotive, FMCG, cestování i B2B. Díky širokému zásahu a hlubokým datům najdeme vhodné publikum pro téměř jakoukoli kampaň.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TEXT BLOCK -->
+    <section class="text-block-section animate-section">
+        <div class="container container-narrow">
+            <h2 class="section-title">Nevíte si rady nebo máte dotaz?</h2>
+            <p class="text-block-text">Potřebujete poradit s nastavením kampaní, výběrem vhodného cílení nebo něco jiného? Dejte nám vědět a my se vám ozveme.</p>
+            <a href="#" class="btn btn-primary">Zeptat se</a>
+        </div>
+    </section>
+
+    <!-- ROZCESTNIK TILES -->
+    <section class="rozcestnik-section animate-section">
+        <div class="rozcestnik-bg">
+            <svg class="net-anim net-anim-rozcestnik" viewBox="0 0 1114 627" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
+        </div>
+        <div class="container container-narrow">
+            <h2 class="section-title">Nevybrali jste si?</h2>
+            <div class="rozcestnik-grid">
+                <article class="rozcestnik-tile">
+                    <h4 class="rozcestnik-title">Seznam Data Clean Room</h4>
+                    <p class="rozcestnik-text">Propojte svá zákaznická data s naším ekosystémem. Dokážeme je bezpečně aktivovat a vaše sdělení efektivně doručit uživatelům, které už znáte.</p>
+                    <a href="#" class="rozcestnik-link">Zjistit více
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                            <path d="M6 4l4 4-4 4" stroke="#FF1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                </article>
+                <article class="rozcestnik-tile">
+                    <h4 class="rozcestnik-title">Seznam Event Measurement</h4>
+                    <p class="rozcestnik-text">Jednotné měření konverzí a pokročilé možnosti retargetingu. Pomůžeme vám sledovat, co lidé na webu dělají, lépe tak pochopíte chování zákazníků a zlepšíte výsledky kampaní.</p>
+                    <a href="#" class="rozcestnik-link">Zjistit více
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                            <path d="M6 4l4 4-4 4" stroke="#FF1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="site-footer">
+    <div class="footer-inner">
+        <div class="footer-grid">
+            <div class="footer-logo-col">
+                <a href="#" class="logo logo-footer" aria-label="Seznam.cz">
+                    <img src="logo-seznam.svg" alt="Seznam.cz" width="120" height="26">
+                </a>
+            </div>
+            <div class="footer-col">
+                <h5 class="footer-heading"><a href="#">Kariéra</a></h5>
+                <ul>
+                    <li><a href="#">Kariéra v Seznamu</a></li>
+                    <li><a href="#">Volné pozice</a></li>
+                    <li><a href="#">Pro studenty</a></li>
+                    <li><a href="#">Vzdělávání pro zaměstnance</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5 class="footer-heading"><a href="#">Služby Seznamu</a></h5>
+                <ul>
+                    <li><a href="#">Mapy.cz</a></li>
+                    <li><a href="#">Email.cz</a></li>
+                    <li><a href="#">Seznam Zprávy</a></li>
+                    <li><a href="#">Sreality</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5 class="footer-heading"><a href="#">Blog</a></h5>
+                <ul>
+                    <li><a href="#">Služby a obsah</a></li>
+                    <li><a href="#">Ze Seznamu</a></li>
+                    <li><a href="#">Pro klienty a specialisty</a></li>
+                    <li><a href="#">Podcast</a></li>
+                    <li><a href="#">Trendy a výzkumy</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5 class="footer-heading"><a href="#">O Seznamu</a></h5>
+                <ul>
+                    <li><a href="#">Kontakt</a></li>
+                    <li><a href="#">Pro novináře</a></li>
+                    <li><a href="#">Pomáháme</a></li>
+                    <li><a href="#">Etický kodex</a></li>
+                    <li><a href="#">Reklama na Seznamu</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-copy">Copyright © 1996–2023 Seznam.cz, a. s.</div>
+            <div class="footer-social">
+                <a href="#" aria-label="Facebook">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12c0-6.6-5.4-12-12-12S0 5.4 0 12c0 6 4.4 11 10.1 11.9V15.5H7.1V12h3.1V9.4c0-3 1.8-4.7 4.5-4.7 1.3 0 2.7.2 2.7.2v3h-1.5c-1.5 0-2 .9-2 1.9V12h3.3l-.5 3.5h-2.8v8.4C19.6 23 24 18 24 12z"/></svg>
+                </a>
+                <a href="#" aria-label="LinkedIn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#0A66C2"><path d="M19 0H5C2.2 0 0 2.2 0 5v14c0 2.8 2.2 5 5 5h14c2.8 0 5-2.2 5-5V5c0-2.8-2.2-5-5-5zM8 19H5V8h3v11zM6.5 6.7c-1 0-1.7-.8-1.7-1.7s.8-1.7 1.7-1.7 1.7.8 1.7 1.7-.7 1.7-1.7 1.7zM20 19h-3v-5.6c0-3.4-4-3.1-4 0V19h-3V8h3v1.8c1.4-2.6 7-2.8 7 2.5V19z"/></svg>
+                </a>
+                <a href="#" aria-label="X">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#000"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+                <a href="#" aria-label="Email">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="#CC0000"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg>
+                </a>
+                <a href="#" aria-label="Instagram">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><defs><radialGradient id="ig" cx="0.3" cy="1" r="1"><stop offset="0" stop-color="#FFD600"/><stop offset="0.5" stop-color="#FF7A00"/><stop offset="1" stop-color="#D62976"/></radialGradient></defs><rect width="24" height="24" rx="6" fill="url(#ig)"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="#fff" stroke-width="1.8"/><circle cx="18" cy="6" r="1.2" fill="#fff"/></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
