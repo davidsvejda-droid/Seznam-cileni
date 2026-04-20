@@ -531,6 +531,17 @@ main { display: block; }
     background: var(--color-surface-2);
     transform: translateY(-2px);
 }
+.tile-badge {
+    display: inline-block;
+    background: #FF1E1E;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+}
 .tile-title {
     font-size: var(--fs-md);
     font-weight: 700;

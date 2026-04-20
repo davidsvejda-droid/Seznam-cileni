@@ -349,6 +349,11 @@
     // Pre-build people icons in case the section is already in view (no intersection trigger)
     document.querySelectorAll('.chart-people-card').forEach(buildPeopleIcons);
 
+    /* ============== Tile badges (random %) ============== */
+    document.querySelectorAll('.tile-badge').forEach((badge) => {
+        badge.textContent = Math.floor(Math.random() * 100 + 1) + ' %';
+    });
+
     /* ============== Tabs ============== */
     document.querySelectorAll('.tab').forEach((tab) => {
         tab.addEventListener('click', () => {
