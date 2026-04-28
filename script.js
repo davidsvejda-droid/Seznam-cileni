@@ -349,12 +349,13 @@
     // Pre-build people icons in case the section is already in view (no intersection trigger)
     document.querySelectorAll('.chart-people-card').forEach(buildPeopleIcons);
 
-    /* ============== Users chart (interactive 100-person waffle) ============== */
+    /* ============== Users chart (interactive 1000-person waffle) ============== */
     (function usersChart() {
         const peopleEl = document.getElementById('usersChartPeople');
-        const legendEl = document.getElementById('usersChartLegend');
+        const subtabsEl = document.getElementById('usersChartSubtabs');
+        const displayEl = document.getElementById('usersChartDisplay');
         const tabs = document.querySelectorAll('.users-chart-tab');
-        if (!peopleEl || !legendEl || !tabs.length) return;
+        if (!peopleEl || !subtabsEl || !displayEl || !tabs.length) return;
 
         const DATA = {
             pohlavi: [
@@ -376,56 +377,77 @@
         };
 
         const personSvg = '<svg class="user-icon" viewBox="0 0 20 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="10" cy="6" r="6"/><path d="M0 20C0 16.6863 2.68629 14 6 14H14C17.3137 14 20 16.6863 20 20V24H0V20Z"/></svg>';
-        peopleEl.innerHTML = Array(1000).fill(personSvg).join('');
+        peopleEl.innerHTML = Array(100).fill(personSvg).join('');
         const icons = peopleEl.querySelectorAll('.user-icon');
 
-        function distribute(groups, total) {
-            const totalValue = groups.reduce((s, g) => s + g.value, 0);
-            const target = Math.round((totalValue * total) / 100);
-            const raw = groups.map((g) => (g.value * total) / 100);
-            const counts = raw.map(Math.floor);
-            const remainders = raw
-                .map((r, i) => ({ idx: i, frac: r - counts[i] }))
-                .sort((a, b) => b.frac - a.frac);
-            let used = counts.reduce((a, b) => a + b, 0);
-            let r = 0;
-            while (used < target && r < remainders.length) {
-                counts[remainders[r].idx]++;
-                used++;
-                r++;
+        const COUNTER_DURATION = 1600;
+        const ICON_STAGGER = 16;
+        let counterRaf = null;
+
+        function animateNumber(el, target, decimals) {
+            if (counterRaf) cancelAnimationFrame(counterRaf);
+            if (prefersReduced) {
+                el.textContent = formatNumber(target, decimals, '');
+                return;
             }
-            return counts;
-        }
-
-        function fmt(n) {
-            return Number.isInteger(n) ? String(n) : n.toString().replace('.', ',');
-        }
-
-        function applyFilter(key) {
-            const groups = DATA[key];
-            if (!groups) return;
-            const counts = distribute(groups, icons.length);
-            let i = 0;
-            groups.forEach((g, gi) => {
-                for (let k = 0; k < counts[gi]; k++) {
-                    if (icons[i]) {
-                        icons[i].style.color = g.color;
-                        icons[i].style.opacity = '1';
-                    }
-                    i++;
+            const from = parseFloat((el.textContent || '0').replace(',', '.')) || 0;
+            const start = performance.now();
+            function tick(now) {
+                const t = Math.min((now - start) / COUNTER_DURATION, 1);
+                const eased = 1 - Math.pow(1 - t, 3);
+                el.textContent = formatNumber(from + (target - from) * eased, decimals, '');
+                if (t < 1) {
+                    counterRaf = requestAnimationFrame(tick);
+                } else {
+                    el.textContent = formatNumber(target, decimals, '');
+                    counterRaf = null;
                 }
-            });
-            for (; i < icons.length; i++) {
-                icons[i].style.color = '#333';
-                icons[i].style.opacity = '0.2';
             }
-            legendEl.innerHTML = groups.map((g) =>
-                '<div class="users-chart-legend-item">' +
-                    '<span class="users-chart-legend-swatch" style="background:' + g.color + '"></span>' +
-                    '<span class="users-chart-legend-label">' + g.label + '</span>' +
-                    '<span class="users-chart-legend-value">' + fmt(g.value) + ' %</span>' +
-                '</div>'
+            counterRaf = requestAnimationFrame(tick);
+        }
+
+        let activeFilter = 'pohlavi';
+        let activeSubIdx = 0;
+
+        function renderSubtabs() {
+            const groups = DATA[activeFilter];
+            subtabsEl.innerHTML = groups.map((g, i) =>
+                '<button class="users-chart-subtab' + (i === activeSubIdx ? ' active' : '') +
+                '" data-idx="' + i + '" role="tab" aria-selected="' + (i === activeSubIdx) + '">' +
+                g.label + '</button>'
             ).join('');
+            subtabsEl.querySelectorAll('.users-chart-subtab').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    activeSubIdx = parseInt(btn.dataset.idx, 10);
+                    renderSubtabs();
+                    updateChart();
+                });
+            });
+        }
+
+        function updateChart() {
+            const groups = DATA[activeFilter];
+            const ag = groups[activeSubIdx];
+            if (!ag) return;
+            const total = icons.length;
+            const raw = (ag.value * total) / 100;
+            const count = ag.value > 0 && raw < 1 ? 1 : Math.round(raw);
+            let i = 0;
+            for (; i < count && i < total; i++) {
+                icons[i].style.transitionDelay = (i * ICON_STAGGER) + 'ms';
+                icons[i].style.color = ag.color;
+            }
+            for (; i < total; i++) {
+                icons[i].style.transitionDelay = '0ms';
+                icons[i].style.color = 'rgba(255, 187, 187, 0.1)';
+            }
+            if (!displayEl.querySelector('.users-chart-display-num')) {
+                displayEl.innerHTML = '<span class="users-chart-display-num">0</span>' +
+                    '<span class="users-chart-display-pct">%</span>';
+            }
+            const numEl = displayEl.querySelector('.users-chart-display-num');
+            const decimals = (ag.value % 1 !== 0) ? 2 : 0;
+            animateNumber(numEl, ag.value, decimals);
         }
 
         tabs.forEach((tab) => {
@@ -436,31 +458,122 @@
                 });
                 tab.classList.add('active');
                 tab.setAttribute('aria-selected', 'true');
-                applyFilter(tab.dataset.filter);
+                activeFilter = tab.dataset.filter;
+                activeSubIdx = 0;
+                renderSubtabs();
+                updateChart();
             });
         });
+
+        renderSubtabs();
 
         const chartsSection = document.getElementById('charts');
         if (chartsSection && 'IntersectionObserver' in window && !prefersReduced) {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        setTimeout(() => applyFilter('pohlavi'), 200);
+                        setTimeout(updateChart, 200);
                         observer.unobserve(entry.target);
                     }
                 });
             }, { threshold: 0.4 });
             observer.observe(chartsSection);
         } else {
-            applyFilter('pohlavi');
+            updateChart();
         }
     })();
 
-    /* ============== Tile badges (random %) ============== */
-    document.querySelectorAll('.tile-badge').forEach((badge) => {
+    /* ============== Tile badges + Show more ============== */
+    const TILE_BADGE_ICON = '<svg class="tile-badge-icon" viewBox="0 0 20 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="10" cy="6" r="6"/><path d="M0 20C0 16.6863 2.68629 14 6 14H14C17.3137 14 20 16.6863 20 20V24H0V20Z"/></svg>';
+
+    function fillTileBadge(badge) {
         const pct = Math.floor(Math.random() * 100 + 1);
-        badge.innerHTML = '<span class="tile-badge-num">' + pct + '</span><span class="tile-badge-pct">%</span>';
-    });
+        badge.innerHTML = TILE_BADGE_ICON + '<span class="tile-badge-num">' + pct + '</span><span class="tile-badge-pct">%</span>';
+    }
+
+    document.querySelectorAll('.tile-badge').forEach(fillTileBadge);
+
+    (function tilesShowMore() {
+        const grid = document.querySelector('.tiles-grid');
+        const ctaWrap = document.querySelector('.tiles-cta');
+        const btn = ctaWrap && ctaWrap.querySelector('.btn');
+        if (!grid || !btn) return;
+
+        const POOL = [
+            { title: 'Rodiny s dětmi plánující letní dovolenou', text: 'Rodiny aktivně srovnávající nabídky cestovních kanceláří, ubytování a aktivity pro děti v ČR i v zahraničí.' },
+            { title: 'Sportovci-amatéři nakupující výbavu', text: 'Lidé pravidelně sportující na rekreační úrovni, kteří investují do běžecké, cyklistické nebo fitness výbavy.' },
+            { title: 'Foodies a gurmáni', text: 'Vášniví milovníci kvalitního jídla, kteří nakupují prémiové potraviny, navštěvují restaurace a vyhledávají recepty.' },
+            { title: 'Hudební nadšenci a fanoušci koncertů', text: 'Sledují aktuální dění v hudbě, kupují vstupenky na živé akce a investují do audio techniky.' },
+            { title: 'Filmoví fanoušci a uživatelé streamovacích služeb', text: 'Aktivně využívají VOD platformy, kupují kino vstupenky a sledují filmové novinky a recenze.' },
+            { title: 'Fitness a wellness zájemci', text: 'Cvičí pravidelně, řeší zdravý životní styl, doplňky stravy a vyhledávají wellness procedury.' },
+            { title: 'Technologičtí early adopteři', text: 'Sledují novinky v elektronice, nakupují prémiové gadgety hned po uvedení a testují nové aplikace.' },
+            { title: 'Hráči videoher a fanoušci esportu', text: 'Pravidelně hrají AAA tituly, nakupují herní příslušenství a sledují esportové soutěže a streamy.' },
+            { title: 'Investoři a uživatelé finančních produktů', text: 'Sledují kapitálové trhy, srovnávají investiční produkty a aktivně používají brokerské aplikace.' },
+            { title: 'Studenti a čerství absolventi', text: 'Mladí lidé v rané kariéře, kteří hledají vzdělávací kurzy, knihy, praxe a první kariérní pozice.' },
+            { title: 'Mladí profesionálové ve městech', text: 'Začínající kariéristé v urbánním prostředí, řešící bydlení, módu, gastro a aktivní volný čas.' },
+            { title: 'Aktivní senioři v online prostoru', text: 'Uživatelé 60+ kteří aktivně nakupují online, sledují zprávy a využívají digitální služby a aplikace.' },
+            { title: 'Majitelé domácích mazlíčků', text: 'Pečují o psy a kočky, pravidelně nakupují krmivo a hračky, navštěvují veterináře a hlídací služby.' },
+            { title: 'Zahrádkáři a domácí pěstitelé', text: 'Věnují se zahradě, balkonovým bylinkám a domácímu pěstování ovoce, zeleniny i okrasných rostlin.' },
+            { title: 'Móda a sezónní obnova šatníku', text: 'Pravidelně obnovují šatník, sledují sezónní trendy a kupují oblečení i obuv online i offline.' },
+            { title: 'Krása, kosmetika a péče o pleť', text: 'Pečují o pleť a vlasy, vyhledávají recenze kosmetiky, navštěvují kadeřnické a kosmetické salony.' },
+            { title: 'Knihy, e-knihy a online vzdělávání', text: 'Pravidelně čtou, navštěvují knihovny, kupují e-knihy a investují do online kurzů a samostudia.' },
+            { title: 'Hobby a kutilové', text: 'Tráví víkendy v dílně nebo na zahradě, opravují, vyrábějí a nakupují nářadí, materiál i návody.' },
+            { title: 'Zájemci o fotovoltaiku a úsporu energie', text: 'Zvažují solární panely pro domácnost, srovnávají dodavatele a sledují aktuální dotační programy.' },
+            { title: 'Elektromobilita a zelené technologie', text: 'Zvažují přechod na EV, řeší ekologická řešení pro domácnost a sledují udržitelné značky a produkty.' },
+            { title: 'Plánovači svateb a slavnostních akcí', text: 'Připravují svatbu nebo větší rodinnou oslavu — řeší catering, fotografa, dekoraci a pronájem místa.' },
+            { title: 'Kávomilové a domácí baristé', text: 'Investují do kvalitní kávy a zařízení, sledují speciality scénu a hledají roastery a kavárny v okolí.' },
+            { title: 'Cyklisté a městská mobilita', text: 'Pravidelně dojíždějí na kole nebo elektrokole, řeší bezpečnost a nakupují cyklovybavení a doplňky.' },
+            { title: 'Zdraví, prevence a doplňky stravy', text: 'Aktivně řeší prevenci, vitamíny a probiotika, sledují trendy v nutričních produktech a wellness.' }
+        ];
+
+        const used = new Set();
+
+        function pickTiles(n) {
+            const available = [];
+            for (let i = 0; i < POOL.length; i++) if (!used.has(i)) available.push(i);
+            const picked = [];
+            while (picked.length < n && available.length) {
+                const r = Math.floor(Math.random() * available.length);
+                const realIdx = available.splice(r, 1)[0];
+                used.add(realIdx);
+                picked.push(POOL[realIdx]);
+            }
+            return picked;
+        }
+
+        function renderTile(data, i) {
+            const a = document.createElement('a');
+            a.href = '#';
+            a.className = 'tile tile-new';
+            a.style.animationDelay = (i * 60) + 'ms';
+            a.innerHTML = '<span class="tile-badge"></span>' +
+                '<h4 class="tile-title">' + data.title + '</h4>' +
+                '<p class="tile-text">' + data.text + '</p>';
+            return a;
+        }
+
+        let firstClick = true;
+        btn.addEventListener('click', () => {
+            const tiles = pickTiles(9);
+            if (!tiles.length) {
+                ctaWrap.style.display = 'none';
+                return;
+            }
+            tiles.forEach((data, i) => {
+                const el = renderTile(data, i);
+                grid.appendChild(el);
+                fillTileBadge(el.querySelector('.tile-badge'));
+            });
+            if (firstClick) {
+                const labelNode = btn.firstChild;
+                if (labelNode && labelNode.nodeType === 3) labelNode.textContent = 'Zobrazit další ';
+                firstClick = false;
+            }
+            if (used.size >= POOL.length) {
+                ctaWrap.style.display = 'none';
+            }
+        });
+    })();
 
     /* ============== FAQ accordion ============== */
     document.querySelectorAll('.faq-toggle').forEach((btn) => {

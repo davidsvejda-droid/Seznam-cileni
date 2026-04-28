@@ -526,46 +526,79 @@ main { display: block; }
     background: #fff;
     color: var(--color-red);
 }
+.users-chart-subtabs {
+    display: inline-flex;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius-pill);
+    padding: 4px;
+    gap: 4px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    max-width: 100%;
+    justify-content: center;
+}
+.users-chart-subtab {
+    padding: 10px 20px;
+    border-radius: var(--radius-pill);
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    color: var(--color-text-soft);
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+.users-chart-subtab:hover:not(.active) { color: #fff; }
+.users-chart-subtab.active {
+    background: #fff;
+    color: var(--color-red);
+}
+.users-chart-display-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 48px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+}
+.users-chart-display {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: 8px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -2px;
+    color: #FFF;
+    text-align: right;
+    min-width: 220px;
+}
+.users-chart-display-num { font-size: 65px; color: #FFF; }
+.users-chart-display-pct {
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    color: #FFF;
+}
 .users-chart-people {
     display: grid;
-    grid-template-columns: repeat(50, 1fr);
-    gap: 3px;
-    margin: 0 auto 28px;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 4px 8px;
+    max-width: 260px;
     width: 100%;
 }
 .user-icon {
     width: 100%;
     height: auto;
-    color: #333;
-    opacity: 0.2;
+    color: rgba(255, 187, 187, 0.1);
+    opacity: 1;
     transition: color 0.4s ease, opacity 0.4s ease;
     aspect-ratio: 20 / 24;
 }
-.users-chart-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px 32px;
-    justify-content: center;
-}
-.users-chart-legend-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: var(--fs-sm);
-}
-.users-chart-legend-swatch {
-    width: 14px;
-    height: 14px;
-    border-radius: 3px;
-    flex-shrink: 0;
-}
-.users-chart-legend-label { color: #fff; font-weight: 600; }
-.users-chart-legend-value { color: var(--color-text-soft); }
-
 @media (max-width: 768px) {
     .users-chart { padding: 24px; }
-    .users-chart-people { grid-template-columns: repeat(40, 1fr); gap: 2px; }
+    .users-chart-people { gap: 3px; max-width: 200px; }
     .users-chart-tab { padding: 8px 14px; font-size: 14px; }
+    .users-chart-display-row { gap: 24px; }
+    .users-chart-display-num { font-size: 50px; }
 }
 
 /* === Tiles section === */
@@ -626,7 +659,7 @@ main { display: block; }
 .tile-badge {
     display: inline-flex;
     align-items: baseline;
-    gap: 4px;
+    gap: 8px;
     color: #FF1E1E;
     font-size: 50px;
     font-weight: 800;
@@ -634,10 +667,24 @@ main { display: block; }
     letter-spacing: -2px;
     margin-bottom: 12px;
 }
+.tile-badge-icon {
+    flex-shrink: 0;
+    width: 16px;
+    height: auto;
+    align-self: baseline;
+}
 .tile-badge-pct {
     font-size: var(--fs-lg);
     font-weight: 700;
     letter-spacing: -0.5px;
+}
+.tile.tile-new {
+    opacity: 0;
+    animation: tileFadeIn 0.4s ease forwards;
+}
+@keyframes tileFadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 .tile-title {
     font-size: var(--fs-md);
