@@ -349,17 +349,118 @@
     // Pre-build people icons in case the section is already in view (no intersection trigger)
     document.querySelectorAll('.chart-people-card').forEach(buildPeopleIcons);
 
-    /* ============== Tile badges (random %) ============== */
-    document.querySelectorAll('.tile-badge').forEach((badge) => {
-        badge.textContent = Math.floor(Math.random() * 100 + 1) + ' %';
-    });
+    /* ============== Users chart (interactive 100-person waffle) ============== */
+    (function usersChart() {
+        const peopleEl = document.getElementById('usersChartPeople');
+        const legendEl = document.getElementById('usersChartLegend');
+        const tabs = document.querySelectorAll('.users-chart-tab');
+        if (!peopleEl || !legendEl || !tabs.length) return;
 
-    /* ============== Tabs ============== */
-    document.querySelectorAll('.tab').forEach((tab) => {
-        tab.addEventListener('click', () => {
-            tab.parentElement.querySelectorAll('.tab').forEach((t) => t.classList.remove('active'));
-            tab.classList.add('active');
+        const DATA = {
+            pohlavi: [
+                { label: 'Ženy', value: 45.54, color: '#FF1E1E' },
+                { label: 'Muži', value: 54.45, color: '#FF8888' }
+            ],
+            vek: [
+                { label: '60 a více let', value: 24.34, color: '#FF1E1E' },
+                { label: '40–59 let', value: 43.23, color: '#FF5555' },
+                { label: '25–39 let', value: 25.43, color: '#FF8888' },
+                { label: '18–24 let', value: 0.56, color: '#FFBBBB' },
+                { label: '17 a méně let', value: 0.13, color: '#FFE5E5' }
+            ],
+            socio: [
+                { label: 'Nižší', value: 33, color: '#FF1E1E' },
+                { label: 'Střední', value: 44, color: '#FF8888' },
+                { label: 'Vyšší', value: 23, color: '#FFBBBB' }
+            ]
+        };
+
+        const personSvg = '<svg class="user-icon" viewBox="0 0 20 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="10" cy="6" r="6"/><path d="M0 20C0 16.6863 2.68629 14 6 14H14C17.3137 14 20 16.6863 20 20V24H0V20Z"/></svg>';
+        peopleEl.innerHTML = Array(1000).fill(personSvg).join('');
+        const icons = peopleEl.querySelectorAll('.user-icon');
+
+        function distribute(groups, total) {
+            const totalValue = groups.reduce((s, g) => s + g.value, 0);
+            const target = Math.round((totalValue * total) / 100);
+            const raw = groups.map((g) => (g.value * total) / 100);
+            const counts = raw.map(Math.floor);
+            const remainders = raw
+                .map((r, i) => ({ idx: i, frac: r - counts[i] }))
+                .sort((a, b) => b.frac - a.frac);
+            let used = counts.reduce((a, b) => a + b, 0);
+            let r = 0;
+            while (used < target && r < remainders.length) {
+                counts[remainders[r].idx]++;
+                used++;
+                r++;
+            }
+            return counts;
+        }
+
+        function fmt(n) {
+            return Number.isInteger(n) ? String(n) : n.toString().replace('.', ',');
+        }
+
+        function applyFilter(key) {
+            const groups = DATA[key];
+            if (!groups) return;
+            const counts = distribute(groups, icons.length);
+            let i = 0;
+            groups.forEach((g, gi) => {
+                for (let k = 0; k < counts[gi]; k++) {
+                    if (icons[i]) {
+                        icons[i].style.color = g.color;
+                        icons[i].style.opacity = '1';
+                    }
+                    i++;
+                }
+            });
+            for (; i < icons.length; i++) {
+                icons[i].style.color = '#333';
+                icons[i].style.opacity = '0.2';
+            }
+            legendEl.innerHTML = groups.map((g) =>
+                '<div class="users-chart-legend-item">' +
+                    '<span class="users-chart-legend-swatch" style="background:' + g.color + '"></span>' +
+                    '<span class="users-chart-legend-label">' + g.label + '</span>' +
+                    '<span class="users-chart-legend-value">' + fmt(g.value) + ' %</span>' +
+                '</div>'
+            ).join('');
+        }
+
+        tabs.forEach((tab) => {
+            tab.addEventListener('click', () => {
+                tabs.forEach((t) => {
+                    t.classList.remove('active');
+                    t.setAttribute('aria-selected', 'false');
+                });
+                tab.classList.add('active');
+                tab.setAttribute('aria-selected', 'true');
+                applyFilter(tab.dataset.filter);
+            });
         });
+
+        const chartsSection = document.getElementById('charts');
+        if (chartsSection && 'IntersectionObserver' in window && !prefersReduced) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => applyFilter('pohlavi'), 200);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.4 });
+            observer.observe(chartsSection);
+        } else {
+            applyFilter('pohlavi');
+        }
+    })();
+
+    /* ============== Tile badges (random %) ============== */
+    const tileBadgeIcon = '<svg class="tile-badge-icon" width="12" height="14" viewBox="0 0 20 24" fill="#fff" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="10" cy="6" r="6"/><path d="M0 20C0 16.6863 2.68629 14 6 14H14C17.3137 14 20 16.6863 20 20V24H0V20Z"/></svg>';
+    document.querySelectorAll('.tile-badge').forEach((badge) => {
+        const pct = Math.floor(Math.random() * 100 + 1);
+        badge.innerHTML = tileBadgeIcon + '<span>' + pct + ' %</span>';
     });
 
     /* ============== FAQ accordion ============== */
