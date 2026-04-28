@@ -625,18 +625,20 @@ main { display: block; }
 }
 .tile-badge {
     display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: #FF1E1E;
-    color: #fff;
-    font-size: 16px;
-    font-weight: 600;
+    align-items: baseline;
+    gap: 4px;
+    color: #FF1E1E;
+    font-size: 50px;
+    font-weight: 800;
     line-height: 1;
-    padding: 4px 12px;
-    border-radius: 4px;
+    letter-spacing: -2px;
     margin-bottom: 12px;
 }
-.tile-badge-icon { flex-shrink: 0; }
+.tile-badge-pct {
+    font-size: var(--fs-lg);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
 .tile-title {
     font-size: var(--fs-md);
     font-weight: 700;

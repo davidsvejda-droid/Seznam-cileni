@@ -457,10 +457,9 @@
     })();
 
     /* ============== Tile badges (random %) ============== */
-    const tileBadgeIcon = '<svg class="tile-badge-icon" width="12" height="14" viewBox="0 0 20 24" fill="#fff" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="10" cy="6" r="6"/><path d="M0 20C0 16.6863 2.68629 14 6 14H14C17.3137 14 20 16.6863 20 20V24H0V20Z"/></svg>';
     document.querySelectorAll('.tile-badge').forEach((badge) => {
         const pct = Math.floor(Math.random() * 100 + 1);
-        badge.innerHTML = tileBadgeIcon + '<span>' + pct + ' %</span>';
+        badge.innerHTML = '<span class="tile-badge-num">' + pct + '</span><span class="tile-badge-pct">%</span>';
     });
 
     /* ============== FAQ accordion ============== */
