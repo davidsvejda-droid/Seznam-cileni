@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
 </head>
 <body>
 
@@ -139,16 +140,16 @@
         <div class="container">
             <h2 class="section-title">Přehled uživatelů na Seznamu</h2>
             <div class="users-chart">
-                <div class="users-chart-tabs" role="tablist">
-                    <button class="users-chart-tab active" data-filter="pohlavi" role="tab" aria-selected="true">Pohlaví</button>
-                    <button class="users-chart-tab" data-filter="vek" role="tab" aria-selected="false">Věk</button>
-                    <button class="users-chart-tab" data-filter="socio" role="tab" aria-selected="false">Socioekonomická klasifikace</button>
+                <div class="users-chart-tabs-row">
+                    <div class="users-chart-tabs" role="tablist">
+                        <button class="users-chart-tab active" data-filter="pohlavi" role="tab" aria-selected="true">Pohlaví</button>
+                        <button class="users-chart-tab" data-filter="vek" role="tab" aria-selected="false">Věk</button>
+                        <button class="users-chart-tab" data-filter="socio" role="tab" aria-selected="false">Socioekonomická klasifikace</button>
+                    </div>
+                    <div class="users-chart-subtabs" id="usersChartSubtabs" role="tablist"></div>
                 </div>
-                <div class="users-chart-subtabs" id="usersChartSubtabs" role="tablist"></div>
-                <div class="users-chart-display-row">
-                    <div class="users-chart-display" id="usersChartDisplay"></div>
-                    <div class="users-chart-people" id="usersChartPeople" aria-hidden="true"></div>
-                </div>
+                <div class="users-chart-display" id="usersChartDisplay"></div>
+                <div class="users-chart-people" id="usersChartPeople" aria-hidden="true"></div>
             </div>
         </div>
     </section>

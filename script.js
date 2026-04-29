@@ -295,32 +295,40 @@
 
     /* ============== IntersectionObserver ============== */
     const ioOptions = { threshold: 0.4, rootMargin: '0px' };
+    const isFigmaCapture = (location.hash || '').indexOf('figmacapture') !== -1;
 
-    const sectionObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('in-view');
-                sectionObserver.unobserve(entry.target);
-            }
+    if (isFigmaCapture) {
+        document.querySelectorAll('.animate-section').forEach((sec) => sec.classList.add('in-view'));
+    } else {
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    sectionObserver.unobserve(entry.target);
+                }
+            });
+        }, ioOptions);
+        document.querySelectorAll('.animate-section').forEach((sec) => {
+            sectionObserver.observe(sec);
         });
-    }, ioOptions);
-
-    document.querySelectorAll('.animate-section').forEach((sec) => {
-        sectionObserver.observe(sec);
-    });
+    }
 
     // Numbers
     const numbersSection = document.getElementById('numbers');
     if (numbersSection) {
-        const numbersObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.querySelectorAll('.counter').forEach(animateCounter);
-                    numbersObserver.unobserve(entry.target);
-                }
-            });
-        }, ioOptions);
-        numbersObserver.observe(numbersSection);
+        if (isFigmaCapture) {
+            numbersSection.querySelectorAll('.counter').forEach(animateCounter);
+        } else {
+            const numbersObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.querySelectorAll('.counter').forEach(animateCounter);
+                        numbersObserver.unobserve(entry.target);
+                    }
+                });
+            }, ioOptions);
+            numbersObserver.observe(numbersSection);
+        }
     }
 
     // Charts
@@ -363,11 +371,11 @@
                 { label: 'Muži', value: 54.45, color: '#FF8888' }
             ],
             vek: [
-                { label: '60 a více let', value: 24.34, color: '#FF1E1E' },
+                { label: '60 a více', value: 24.34, color: '#FF1E1E' },
                 { label: '40–59 let', value: 43.23, color: '#FF5555' },
                 { label: '25–39 let', value: 25.43, color: '#FF8888' },
                 { label: '18–24 let', value: 0.56, color: '#FFBBBB' },
-                { label: '17 a méně let', value: 0.13, color: '#FFE5E5' }
+                { label: '17 a méně', value: 0.13, color: '#FFE5E5' }
             ],
             socio: [
                 { label: 'Nižší', value: 33, color: '#FF1E1E' },
@@ -376,7 +384,7 @@
             ]
         };
 
-        const personSvg = '<svg class="user-icon" viewBox="0 0 20 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="10" cy="6" r="6"/><path d="M0 20C0 16.6863 2.68629 14 6 14H14C17.3137 14 20 16.6863 20 20V24H0V20Z"/></svg>';
+        const personSvg = '<svg class="user-icon" viewBox="0 0 16 44" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M13.4286 10.9389H2.57176C1.15147 10.9389 0 12.0704 0 13.466L0 24.3233C0 25.7612 1.18609 26.9267 2.64936 26.9267H3.40168V40.0284C3.40168 41.007 4.20892 41.8 5.2046 41.8H10.7954C11.7911 41.8 12.5983 41.0068 12.5983 40.0284V26.9267H13.3506C14.8139 26.9267 16 25.7612 16 24.3233V13.466C16.0002 12.0702 14.8489 10.9389 13.4286 10.9389Z"/><path d="M8.00065 9.1194C10.5634 9.1194 12.641 7.07795 12.641 4.5597C12.641 2.04145 10.5634 0 8.00065 0C5.43789 0 3.36035 2.04145 3.36035 4.5597C3.36035 7.07795 5.43789 9.1194 8.00065 9.1194Z"/></svg>';
         peopleEl.innerHTML = Array(100).fill(personSvg).join('');
         const icons = peopleEl.querySelectorAll('.user-icon');
 
@@ -468,7 +476,8 @@
         renderSubtabs();
 
         const chartsSection = document.getElementById('charts');
-        if (chartsSection && 'IntersectionObserver' in window && !prefersReduced) {
+        const captureMode = (location.hash || '').indexOf('figmacapture') !== -1;
+        if (chartsSection && 'IntersectionObserver' in window && !prefersReduced && !captureMode) {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
@@ -484,7 +493,7 @@
     })();
 
     /* ============== Tile badges + Show more ============== */
-    const TILE_BADGE_ICON = '<svg class="tile-badge-icon" viewBox="0 0 20 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="10" cy="6" r="6"/><path d="M0 20C0 16.6863 2.68629 14 6 14H14C17.3137 14 20 16.6863 20 20V24H0V20Z"/></svg>';
+    const TILE_BADGE_ICON = '<svg class="tile-badge-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><circle cx="12" cy="7" r="5"/><path d="M2 19C2 15.6863 4.68629 13 8 13H16C19.3137 13 22 15.6863 22 19V22H2V19Z"/></svg>';
 
     function fillTileBadge(badge) {
         const pct = Math.floor(Math.random() * 100 + 1);

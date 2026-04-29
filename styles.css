@@ -494,12 +494,21 @@ main { display: block; }
 .users-chart {
     background: var(--color-card-bg);
     border-radius: var(--radius-xl);
-    padding: 40px;
+    padding: 40px 40px 56px;
     position: relative;
     z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+.users-chart-tabs-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 16px;
+    margin-bottom: 48px;
+    width: 100%;
 }
 .users-chart-tabs {
     display: inline-flex;
@@ -507,7 +516,6 @@ main { display: block; }
     border-radius: var(--radius-pill);
     padding: 4px;
     gap: 4px;
-    margin-bottom: 32px;
     flex-wrap: wrap;
     max-width: 100%;
     justify-content: center;
@@ -532,10 +540,10 @@ main { display: block; }
     border-radius: var(--radius-pill);
     padding: 4px;
     gap: 4px;
-    margin-bottom: 32px;
     flex-wrap: wrap;
     max-width: 100%;
     justify-content: center;
+    margin-left: auto;
 }
 .users-chart-subtab {
     padding: 10px 20px;
@@ -551,25 +559,17 @@ main { display: block; }
     background: #fff;
     color: var(--color-red);
 }
-.users-chart-display-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 48px;
-    flex-wrap: wrap;
-    margin-bottom: 28px;
-}
 .users-chart-display {
     display: flex;
     align-items: baseline;
-    justify-content: flex-end;
+    justify-content: center;
     gap: 8px;
     font-weight: 800;
     line-height: 1;
     letter-spacing: -2px;
     color: #FFF;
-    text-align: right;
-    min-width: 220px;
+    text-align: center;
+    margin-bottom: 24px;
 }
 .users-chart-display-num { font-size: 65px; color: #FFF; }
 .users-chart-display-pct {
@@ -580,10 +580,11 @@ main { display: block; }
 }
 .users-chart-people {
     display: grid;
-    grid-template-columns: repeat(10, 1fr);
+    grid-template-columns: repeat(20, 1fr);
     gap: 4px 8px;
-    max-width: 260px;
+    max-width: 540px;
     width: 100%;
+    margin: 0 auto;
 }
 .user-icon {
     width: 100%;
@@ -591,13 +592,13 @@ main { display: block; }
     color: rgba(255, 187, 187, 0.1);
     opacity: 1;
     transition: color 0.4s ease, opacity 0.4s ease;
-    aspect-ratio: 20 / 24;
+    aspect-ratio: 16 / 44;
 }
 @media (max-width: 768px) {
     .users-chart { padding: 24px; }
-    .users-chart-people { gap: 3px; max-width: 200px; }
+    .users-chart-people { gap: 3px 4px; max-width: 420px; }
     .users-chart-tab { padding: 8px 14px; font-size: 14px; }
-    .users-chart-display-row { gap: 24px; }
+    .users-chart-tabs-row { gap: 12px; }
     .users-chart-display-num { font-size: 50px; }
 }
 
@@ -669,7 +670,7 @@ main { display: block; }
 }
 .tile-badge-icon {
     flex-shrink: 0;
-    width: 16px;
+    width: 20px;
     height: auto;
     align-self: baseline;
 }
