@@ -357,45 +357,73 @@
     // Pre-build people icons in case the section is already in view (no intersection trigger)
     document.querySelectorAll('.chart-people-card').forEach(buildPeopleIcons);
 
-    /* ============== Users chart (interactive 1000-person waffle) ============== */
+    /* ============== Users chart (2-column waffle, clickable legend, wiggle) ============== */
     (function usersChart() {
         const peopleEl = document.getElementById('usersChartPeople');
         const subtabsEl = document.getElementById('usersChartSubtabs');
         const displayEl = document.getElementById('usersChartDisplay');
+        const absEl = document.getElementById('usersChartAbs');
         const tabs = document.querySelectorAll('.users-chart-tab');
-        if (!peopleEl || !subtabsEl || !displayEl || !tabs.length) return;
+        if (!peopleEl || !subtabsEl || !displayEl || !absEl || !tabs.length) return;
 
         const DATA = {
             pohlavi: [
-                { label: 'Ženy', value: 45.54, color: '#FF1E1E' },
-                { label: 'Muži', value: 54.45, color: '#FF8888' }
+                { label: 'Ženy', value: 45, abs: '3,5 mil.', color: '#FF1E1E' },
+                { label: 'Muži', value: 54, abs: '4,1 mil.', color: '#FF8888' }
             ],
             vek: [
-                { label: '60 a více', value: 24.34, color: '#FF1E1E' },
-                { label: '40–59 let', value: 43.23, color: '#FF5555' },
-                { label: '25–39 let', value: 25.43, color: '#FF8888' },
-                { label: '18–24 let', value: 0.56, color: '#FFBBBB' },
-                { label: '17 a méně', value: 0.13, color: '#FFE5E5' }
+                { label: '17 a méně', value: 1,  abs: '~10 tis.',  color: '#FFE5E5' },
+                { label: '18–24',     value: 1,  abs: '~43 tis.',  color: '#FFBBBB' },
+                { label: '25–39',     value: 25, abs: '~1,9 mil.', color: '#FF8888' },
+                { label: '40–59',     value: 43, abs: '~3,3 mil.', color: '#FF5555' },
+                { label: '60 a více', value: 24, abs: '~1,8 mil.', color: '#FF1E1E' }
             ],
             socio: [
-                { label: 'Nižší', value: 33, color: '#FF1E1E' },
-                { label: 'Střední', value: 44, color: '#FF8888' },
-                { label: 'Vyšší', value: 23, color: '#FFBBBB' }
+                { label: 'Nižší',   value: 33, abs: '~2,5 mil.', color: '#FF1E1E' },
+                { label: 'Střední', value: 44, abs: '~3,3 mil.', color: '#FF8888' },
+                { label: 'Vyšší',   value: 23, abs: '~1,7 mil.', color: '#FFBBBB' }
             ]
         };
 
+        const TOTAL = 100;
         const personSvg = '<svg class="user-icon" viewBox="0 0 16 44" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M13.4286 10.9389H2.57176C1.15147 10.9389 0 12.0704 0 13.466L0 24.3233C0 25.7612 1.18609 26.9267 2.64936 26.9267H3.40168V40.0284C3.40168 41.007 4.20892 41.8 5.2046 41.8H10.7954C11.7911 41.8 12.5983 41.0068 12.5983 40.0284V26.9267H13.3506C14.8139 26.9267 16 25.7612 16 24.3233V13.466C16.0002 12.0702 14.8489 10.9389 13.4286 10.9389Z"/><path d="M8.00065 9.1194C10.5634 9.1194 12.641 7.07795 12.641 4.5597C12.641 2.04145 10.5634 0 8.00065 0C5.43789 0 3.36035 2.04145 3.36035 4.5597C3.36035 7.07795 5.43789 9.1194 8.00065 9.1194Z"/></svg>';
-        peopleEl.innerHTML = Array(100).fill(personSvg).join('');
+        peopleEl.innerHTML = Array(TOTAL).fill(personSvg).join('');
         const icons = peopleEl.querySelectorAll('.user-icon');
 
+        // Pick TOTAL cells closest to center of a square grid → forms a disk
+        const GRID_SIZE = 13;
+        const gridCells = [];
+        for (let r = 0; r < GRID_SIZE; r++) {
+            for (let c = 0; c < GRID_SIZE; c++) {
+                const dx = c - (GRID_SIZE - 1) / 2;
+                const dy = r - (GRID_SIZE - 1) / 2;
+                gridCells.push({ r: r + 1, c: c + 1, dist: dx * dx + dy * dy });
+            }
+        }
+        gridCells.sort((a, b) => a.dist - b.dist || (a.r - b.r) || (a.c - b.c));
+        const placedCells = gridCells.slice(0, TOTAL);
+
+        // Fixed random offsets per icon (±3 px) + grid placement
+        icons.forEach((icon, i) => {
+            const ox = (Math.random() * 6 - 3).toFixed(1);
+            const oy = (Math.random() * 6 - 3).toFixed(1);
+            icon.style.setProperty('--ox', ox + 'px');
+            icon.style.setProperty('--oy', oy + 'px');
+            const cell = placedCells[i];
+            if (cell) {
+                icon.style.gridRow = String(cell.r);
+                icon.style.gridColumn = String(cell.c);
+            }
+        });
+
         const COUNTER_DURATION = 1600;
-        const ICON_STAGGER = 16;
+        const ICON_STAGGER = 10;
         let counterRaf = null;
 
-        function animateNumber(el, target, decimals) {
+        function animateNumber(el, target) {
             if (counterRaf) cancelAnimationFrame(counterRaf);
             if (prefersReduced) {
-                el.textContent = formatNumber(target, decimals, '');
+                el.textContent = String(target);
                 return;
             }
             const from = parseFloat((el.textContent || '0').replace(',', '.')) || 0;
@@ -403,11 +431,11 @@
             function tick(now) {
                 const t = Math.min((now - start) / COUNTER_DURATION, 1);
                 const eased = 1 - Math.pow(1 - t, 3);
-                el.textContent = formatNumber(from + (target - from) * eased, decimals, '');
+                el.textContent = String(Math.round(from + (target - from) * eased));
                 if (t < 1) {
                     counterRaf = requestAnimationFrame(tick);
                 } else {
-                    el.textContent = formatNumber(target, decimals, '');
+                    el.textContent = String(target);
                     counterRaf = null;
                 }
             }
@@ -415,47 +443,97 @@
         }
 
         let activeFilter = 'pohlavi';
-        let activeSubIdx = 0;
+        let activeIdx = 0;
+        let groupAssignment = new Array(TOTAL).fill(-1);
+
+        function adjustedCounts(groups) {
+            const counts = groups.map((g) => g.value);
+            const sum = counts.reduce((a, b) => a + b, 0);
+            if (sum < TOTAL) {
+                let maxIdx = 0;
+                for (let i = 1; i < counts.length; i++) {
+                    if (counts[i] > counts[maxIdx]) maxIdx = i;
+                }
+                counts[maxIdx] += (TOTAL - sum);
+            }
+            return counts;
+        }
+
+        function generateAssignment() {
+            const groups = DATA[activeFilter];
+            const counts = adjustedCounts(groups);
+            const indices = [];
+            for (let i = 0; i < TOTAL; i++) indices.push(i);
+            for (let i = indices.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                const tmp = indices[i]; indices[i] = indices[j]; indices[j] = tmp;
+            }
+            groupAssignment = new Array(TOTAL).fill(-1);
+            let pos = 0;
+            counts.forEach((c, gi) => {
+                for (let k = 0; k < c && pos < TOTAL; k++) {
+                    groupAssignment[indices[pos]] = gi;
+                    pos++;
+                }
+            });
+        }
+
+        function applyColors() {
+            const groups = DATA[activeFilter];
+            const ag = groups[activeIdx];
+            let order = 0;
+            for (let i = 0; i < icons.length; i++) {
+                if (ag && groupAssignment[i] === activeIdx) {
+                    icons[i].style.transitionDelay = (order * ICON_STAGGER) + 'ms';
+                    icons[i].style.color = ag.color;
+                    icons[i].style.opacity = '1';
+                    order++;
+                } else {
+                    icons[i].style.transitionDelay = '0ms';
+                    icons[i].style.color = 'rgba(255, 187, 187, 0.1)';
+                    icons[i].style.opacity = '1';
+                }
+            }
+        }
 
         function renderSubtabs() {
             const groups = DATA[activeFilter];
             subtabsEl.innerHTML = groups.map((g, i) =>
-                '<button class="users-chart-subtab' + (i === activeSubIdx ? ' active' : '') +
-                '" data-idx="' + i + '" role="tab" aria-selected="' + (i === activeSubIdx) + '">' +
+                '<button class="users-chart-subtab' + (i === activeIdx ? ' active' : '') +
+                '" data-idx="' + i + '" role="tab" aria-selected="' + (i === activeIdx) + '">' +
                 g.label + '</button>'
             ).join('');
             subtabsEl.querySelectorAll('.users-chart-subtab').forEach((btn) => {
                 btn.addEventListener('click', () => {
-                    activeSubIdx = parseInt(btn.dataset.idx, 10);
+                    activeIdx = parseInt(btn.dataset.idx, 10);
                     renderSubtabs();
-                    updateChart();
+                    applyColors();
+                    updateLeft();
                 });
             });
         }
 
-        function updateChart() {
+        function updateLeft() {
             const groups = DATA[activeFilter];
-            const ag = groups[activeSubIdx];
+            const ag = groups[activeIdx];
             if (!ag) return;
-            const total = icons.length;
-            const raw = (ag.value * total) / 100;
-            const count = ag.value > 0 && raw < 1 ? 1 : Math.round(raw);
-            let i = 0;
-            for (; i < count && i < total; i++) {
-                icons[i].style.transitionDelay = (i * ICON_STAGGER) + 'ms';
-                icons[i].style.color = ag.color;
-            }
-            for (; i < total; i++) {
-                icons[i].style.transitionDelay = '0ms';
-                icons[i].style.color = 'rgba(255, 187, 187, 0.1)';
-            }
+            const counts = adjustedCounts(groups);
             if (!displayEl.querySelector('.users-chart-display-num')) {
                 displayEl.innerHTML = '<span class="users-chart-display-num">0</span>' +
                     '<span class="users-chart-display-pct">%</span>';
             }
             const numEl = displayEl.querySelector('.users-chart-display-num');
-            const decimals = (ag.value % 1 !== 0) ? 2 : 0;
-            animateNumber(numEl, ag.value, decimals);
+            animateNumber(numEl, counts[activeIdx]);
+            absEl.textContent = '≈ ' + ag.abs + ' uživatelů';
+        }
+
+        function applyFilter(filter) {
+            activeFilter = filter;
+            activeIdx = 0;
+            generateAssignment();
+            applyColors();
+            renderSubtabs();
+            updateLeft();
         }
 
         tabs.forEach((tab) => {
@@ -466,30 +544,30 @@
                 });
                 tab.classList.add('active');
                 tab.setAttribute('aria-selected', 'true');
-                activeFilter = tab.dataset.filter;
-                activeSubIdx = 0;
-                renderSubtabs();
-                updateChart();
+                applyFilter(tab.dataset.filter);
             });
         });
 
-        renderSubtabs();
-
-        const chartsSection = document.getElementById('charts');
-        const captureMode = (location.hash || '').indexOf('figmacapture') !== -1;
-        if (chartsSection && 'IntersectionObserver' in window && !prefersReduced && !captureMode) {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        setTimeout(updateChart, 200);
-                        observer.unobserve(entry.target);
-                    }
+        function scheduleWiggle() {
+            const delay = 3000 + Math.random() * 2000;
+            setTimeout(() => {
+                const count = Math.random() < 0.5 ? 1 : 2;
+                const used = new Set();
+                while (used.size < count) used.add(Math.floor(Math.random() * icons.length));
+                used.forEach((idx) => {
+                    const icon = icons[idx];
+                    if (!icon) return;
+                    icon.classList.add('user-icon-wiggle');
+                    setTimeout(() => icon.classList.remove('user-icon-wiggle'), 600);
                 });
-            }, { threshold: 0.4 });
-            observer.observe(chartsSection);
-        } else {
-            updateChart();
+                scheduleWiggle();
+            }, delay);
         }
+
+        applyFilter('pohlavi');
+
+        const captureMode = (location.hash || '').indexOf('figmacapture') !== -1;
+        if (!prefersReduced && !captureMode) scheduleWiggle();
     })();
 
     /* ============== Tile badges + Show more ============== */

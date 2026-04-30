@@ -490,7 +490,16 @@ main { display: block; }
     margin-top: 4px;
 }
 
-/* === Users chart (interactive) === */
+/* === Section intro paragraph === */
+.section-intro {
+    color: var(--color-text-soft);
+    font-size: var(--fs-md);
+    line-height: 1.6;
+    margin: -24px 0 40px;
+    max-width: 760px;
+}
+
+/* === Users chart (2-column with random distribution) === */
 .users-chart {
     background: var(--color-card-bg);
     border-radius: var(--radius-xl);
@@ -499,7 +508,7 @@ main { display: block; }
     z-index: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
 }
 .users-chart-tabs-row {
     display: flex;
@@ -559,47 +568,79 @@ main { display: block; }
     background: #fff;
     color: var(--color-red);
 }
+.users-chart-body {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 48px;
+    width: 100%;
+}
+.users-chart-left,
+.users-chart-right {
+    flex: 1 1 320px;
+    min-width: 0;
+}
+.users-chart-left { padding-left: 40px; }
 .users-chart-display {
     display: flex;
     align-items: baseline;
-    justify-content: center;
-    gap: 8px;
+    gap: 4px;
     font-weight: 800;
     line-height: 1;
     letter-spacing: -2px;
     color: #FFF;
-    text-align: center;
-    margin-bottom: 24px;
+    margin-bottom: 12px;
 }
-.users-chart-display-num { font-size: 65px; color: #FFF; }
-.users-chart-display-pct {
-    font-size: 18px;
-    font-weight: 400;
-    letter-spacing: -0.5px;
-    color: #FFF;
+.users-chart-display-num { font-size: 80px; color: #FFF; }
+.users-chart-display-pct { font-size: 28px; font-weight: 700; letter-spacing: -1px; color: #FFF; }
+.users-chart-abs {
+    color: var(--color-text-soft);
+    font-size: var(--fs-md);
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+.users-chart-text {
+    color: var(--color-text-soft);
+    font-size: var(--fs-sm);
+    line-height: 1.6;
+    margin: 0;
+    max-width: 420px;
 }
 .users-chart-people {
     display: grid;
-    grid-template-columns: repeat(20, 1fr);
-    gap: 4px 8px;
-    max-width: 540px;
+    grid-template-columns: repeat(13, 1fr);
+    grid-template-rows: repeat(13, 1fr);
+    gap: 6px 8px;
+    margin: 0 0 24px;
+    max-width: 522px;
     width: 100%;
-    margin: 0 auto;
+    aspect-ratio: 1 / 1;
+    place-items: center;
 }
 .user-icon {
-    width: 100%;
-    height: auto;
+    width: auto;
+    height: 100%;
     color: rgba(255, 187, 187, 0.1);
     opacity: 1;
-    transition: color 0.4s ease, opacity 0.4s ease;
+    transition: color 0.3s ease, opacity 0.3s ease;
     aspect-ratio: 16 / 44;
+    transform: translate(var(--ox, 0), var(--oy, 0));
+    will-change: transform;
+}
+.user-icon.user-icon-wiggle {
+    animation: userIconWiggle 600ms ease-in-out;
+}
+@keyframes userIconWiggle {
+    0%, 100% { transform: translate(var(--ox, 0px), var(--oy, 0px)); }
+    50%      { transform: translate(var(--ox, 0px), calc(var(--oy, 0px) - 4px)); }
 }
 @media (max-width: 768px) {
     .users-chart { padding: 24px; }
-    .users-chart-people { gap: 3px 4px; max-width: 420px; }
+    .users-chart-body { gap: 32px; }
+    .users-chart-display-num { font-size: 60px; }
+    .users-chart-display-pct { font-size: 22px; }
     .users-chart-tab { padding: 8px 14px; font-size: 14px; }
     .users-chart-tabs-row { gap: 12px; }
-    .users-chart-display-num { font-size: 50px; }
 }
 
 /* === Tiles section === */
