@@ -3,9 +3,6 @@
 
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    /* ============== Person icon ============== */
-    const PERSON_SVG = `<img src="one.svg" alt="" width="20" height="24">`;
-
     /* ============== Build net-anim SVGs ============== */
     // Per-dot motion vectors (direction + period). 6 directions so neighbours
     // tend to move oppositely → the network feels alive.
@@ -189,110 +186,6 @@
         requestAnimationFrame(tick);
     }
 
-    /* ============== Donut animation ============== */
-    function animateDonut(card) {
-        const arc = card.querySelector('.donut-arc');
-        if (!arc || arc.dataset.animated === '1') return;
-        arc.dataset.animated = '1';
-        const finalOffset = parseFloat(arc.dataset.finalOffset || '0');
-        const woman = card.querySelector('.donut-icon-woman');
-        const man = card.querySelector('.donut-icon-man');
-        const legendItems = card.querySelectorAll('.legend-item');
-        const womanLegend = legendItems[0];
-        const manLegend = legendItems[1];
-
-        if (prefersReduced) {
-            arc.style.strokeDashoffset = finalOffset;
-            [woman, womanLegend, man, manLegend].forEach((el) => el && el.classList.add('show'));
-            return;
-        }
-        requestAnimationFrame(() => {
-            arc.style.strokeDashoffset = finalOffset;
-        });
-        // After donut finishes drawing (~1.4s), reveal woman, then man +0.3s
-        setTimeout(() => {
-            if (woman) woman.classList.add('show');
-            if (womanLegend) womanLegend.classList.add('show');
-            setTimeout(() => {
-                if (man) man.classList.add('show');
-                if (manLegend) manLegend.classList.add('show');
-            }, 300);
-        }, 1400);
-    }
-
-    /* ============== Bars animation ============== */
-    function animateBars(card) {
-        card.querySelectorAll('.bar-wrap').forEach((wrap, i) => {
-            const bar = wrap.querySelector('.bar');
-            const label = wrap.querySelector('.bar-label');
-            if (!bar || bar.dataset.animated === '1') return;
-            bar.dataset.animated = '1';
-            const h = parseInt(bar.dataset.height, 10);
-            if (prefersReduced) {
-                bar.style.height = h + 'px';
-                bar.classList.add('animated');
-                if (label) label.classList.add('show');
-                return;
-            }
-            setTimeout(() => {
-                bar.style.height = h + 'px';
-                if (label) label.classList.add('show');
-                setTimeout(() => bar.classList.add('animated'), 600);
-            }, i * 300);
-        });
-    }
-
-    /* ============== People icons ============== */
-    function buildPeopleIcons(card) {
-        card.querySelectorAll('.people-col').forEach((col) => {
-            const iconsBox = col.querySelector('.people-icons');
-            if (!iconsBox || iconsBox.dataset.built === '1') return;
-            iconsBox.dataset.built = '1';
-            const total = parseInt(col.dataset.icons, 10);
-            const cols = parseInt(col.dataset.cols, 10);
-            const rows = parseInt(iconsBox.dataset.rows || '0', 10);
-            const extra = parseInt(iconsBox.dataset.extra || '0', 10);
-            // Build pyramid: bottom rows are full (cols), top row is `extra` icons centered.
-            // people-icons uses column-reverse, so rendering order builds from bottom up.
-            const rowsHtml = [];
-            for (let r = 0; r < rows; r++) {
-                let rowHtml = '<div class="people-row">';
-                for (let c = 0; c < cols; c++) {
-                    rowHtml += `<div class="person-icon">${PERSON_SVG}</div>`;
-                }
-                rowHtml += '</div>';
-                rowsHtml.push(rowHtml);
-            }
-            if (extra > 0) {
-                let rowHtml = '<div class="people-row">';
-                for (let c = 0; c < extra; c++) {
-                    rowHtml += `<div class="person-icon">${PERSON_SVG}</div>`;
-                }
-                rowHtml += '</div>';
-                rowsHtml.push(rowHtml);
-            }
-            // Single icon for tiny cols
-            if (rows === 0 && extra === 0 && total === 1) {
-                iconsBox.innerHTML = `<div class="person-icon">${PERSON_SVG}</div>`;
-                return;
-            }
-            iconsBox.innerHTML = rowsHtml.join('');
-        });
-    }
-
-    function revealPeopleIcons(card) {
-        if (card.dataset.peopleRevealed === '1') return;
-        card.dataset.peopleRevealed = '1';
-        const icons = card.querySelectorAll('.person-icon');
-        if (prefersReduced) {
-            icons.forEach((i) => i.classList.add('visible'));
-            return;
-        }
-        icons.forEach((icon, i) => {
-            setTimeout(() => icon.classList.add('visible'), i * 18);
-        });
-    }
-
     /* ============== IntersectionObserver ============== */
     const ioOptions = { threshold: 0.4, rootMargin: '0px' };
     const isFigmaCapture = (location.hash || '').indexOf('figmacapture') !== -1;
@@ -331,32 +224,6 @@
         }
     }
 
-    // Charts
-    const chartCards = document.querySelectorAll('.chart-card');
-    const chartObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                const card = entry.target;
-                card.classList.add('in-view');
-                if (card.classList.contains('chart-donut-card')) {
-                    setTimeout(() => animateDonut(card), 400);
-                }
-                if (card.classList.contains('chart-bars-card')) {
-                    setTimeout(() => animateBars(card), 300);
-                }
-                if (card.classList.contains('chart-people-card')) {
-                    buildPeopleIcons(card);
-                    setTimeout(() => revealPeopleIcons(card), 300);
-                }
-                chartObserver.unobserve(card);
-            }
-        });
-    }, ioOptions);
-    chartCards.forEach((card) => chartObserver.observe(card));
-
-    // Pre-build people icons in case the section is already in view (no intersection trigger)
-    document.querySelectorAll('.chart-people-card').forEach(buildPeopleIcons);
-
     /* ============== Users chart (2-column waffle, clickable legend, wiggle) ============== */
     (function usersChart() {
         const peopleEl = document.getElementById('usersChartPeople');
@@ -386,35 +253,33 @@
         };
 
         const TOTAL = 100;
-        const personSvg = '<svg class="user-icon" viewBox="0 0 16 44" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M13.4286 10.9389H2.57176C1.15147 10.9389 0 12.0704 0 13.466L0 24.3233C0 25.7612 1.18609 26.9267 2.64936 26.9267H3.40168V40.0284C3.40168 41.007 4.20892 41.8 5.2046 41.8H10.7954C11.7911 41.8 12.5983 41.0068 12.5983 40.0284V26.9267H13.3506C14.8139 26.9267 16 25.7612 16 24.3233V13.466C16.0002 12.0702 14.8489 10.9389 13.4286 10.9389Z"/><path d="M8.00065 9.1194C10.5634 9.1194 12.641 7.07795 12.641 4.5597C12.641 2.04145 10.5634 0 8.00065 0C5.43789 0 3.36035 2.04145 3.36035 4.5597C3.36035 7.07795 5.43789 9.1194 8.00065 9.1194Z"/></svg>';
-        peopleEl.innerHTML = Array(TOTAL).fill(personSvg).join('');
+        const ICON_COUNT = 11;
+        // Crowd-perspective rows: DOM order back → front so the front row (last in DOM)
+        // naturally overlaps the rows behind it. Counts sum to TOTAL.
+        const ROWS = [
+            { count: 14, scale: 0.75,   variant: '-r4' },
+            { count: 14, scale: 0.85,   variant: '-r4' },
+            { count: 13, scale: 0.95,   variant: '-r4' },
+            { count: 13, scale: 1.05,   variant: '-r4' },
+            { count: 13, scale: 1.15,   variant: '-r4' },
+            { count: 12, scale: 1.3125, variant: '-r3' },
+            { count: 11, scale: 1.485,  variant: '-r2' },
+            { count: 10, scale: 1.80,   variant: '' }
+        ];
+        const randIcon = () => String(Math.floor(Math.random() * ICON_COUNT) + 1).padStart(2, '0');
+        peopleEl.innerHTML = ROWS.map((row) =>
+            '<div class="users-chart-row" style="--row-scale:' + row.scale + '">' +
+            Array.from({ length: row.count }, () => {
+                const id = randIcon();
+                return '<span class="user-icon" aria-hidden="true">' +
+                    '<img class="user-icon-img user-icon-img--inactive" src="' + id + '-i.svg" alt="" draggable="false">' +
+                    '<img class="user-icon-img user-icon-img--active" src="' + id + row.variant + '.svg" alt="" draggable="false">' +
+                    '</span>';
+            }).join('') +
+            '</div>'
+        ).join('');
         const icons = peopleEl.querySelectorAll('.user-icon');
-
-        // Pick TOTAL cells closest to center of a square grid → forms a disk
-        const GRID_SIZE = 13;
-        const gridCells = [];
-        for (let r = 0; r < GRID_SIZE; r++) {
-            for (let c = 0; c < GRID_SIZE; c++) {
-                const dx = c - (GRID_SIZE - 1) / 2;
-                const dy = r - (GRID_SIZE - 1) / 2;
-                gridCells.push({ r: r + 1, c: c + 1, dist: dx * dx + dy * dy });
-            }
-        }
-        gridCells.sort((a, b) => a.dist - b.dist || (a.r - b.r) || (a.c - b.c));
-        const placedCells = gridCells.slice(0, TOTAL);
-
-        // Fixed random offsets per icon (±3 px) + grid placement
-        icons.forEach((icon, i) => {
-            const ox = (Math.random() * 6 - 3).toFixed(1);
-            const oy = (Math.random() * 6 - 3).toFixed(1);
-            icon.style.setProperty('--ox', ox + 'px');
-            icon.style.setProperty('--oy', oy + 'px');
-            const cell = placedCells[i];
-            if (cell) {
-                icon.style.gridRow = String(cell.r);
-                icon.style.gridColumn = String(cell.c);
-            }
-        });
+        const activeLayers = peopleEl.querySelectorAll('.user-icon-img--active');
 
         const COUNTER_DURATION = 1600;
         const ICON_STAGGER = 10;
@@ -444,7 +309,6 @@
 
         let activeFilter = 'pohlavi';
         let activeIdx = 0;
-        let groupAssignment = new Array(TOTAL).fill(-1);
 
         function adjustedCounts(groups) {
             const counts = groups.map((g) => g.value);
@@ -459,39 +323,22 @@
             return counts;
         }
 
-        function generateAssignment() {
-            const groups = DATA[activeFilter];
-            const counts = adjustedCounts(groups);
-            const indices = [];
-            for (let i = 0; i < TOTAL; i++) indices.push(i);
-            for (let i = indices.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                const tmp = indices[i]; indices[i] = indices[j]; indices[j] = tmp;
-            }
-            groupAssignment = new Array(TOTAL).fill(-1);
-            let pos = 0;
-            counts.forEach((c, gi) => {
-                for (let k = 0; k < c && pos < TOTAL; k++) {
-                    groupAssignment[indices[pos]] = gi;
-                    pos++;
-                }
-            });
-        }
-
         function applyColors() {
             const groups = DATA[activeFilter];
             const ag = groups[activeIdx];
+            const activeCount = ag ? ag.value : 0;
+            const inactiveCount = TOTAL - activeCount;
+            // icons[] is in DOM order: back row first → front row last.
+            // Active fills the FRONT (highest indices); stagger animates front-to-back.
             let order = 0;
-            for (let i = 0; i < icons.length; i++) {
-                if (ag && groupAssignment[i] === activeIdx) {
-                    icons[i].style.transitionDelay = (order * ICON_STAGGER) + 'ms';
-                    icons[i].style.color = ag.color;
-                    icons[i].style.opacity = '1';
+            for (let i = activeLayers.length - 1; i >= 0; i--) {
+                if (i >= inactiveCount) {
+                    activeLayers[i].style.transitionDelay = (order * ICON_STAGGER) + 'ms';
+                    activeLayers[i].style.opacity = '1';
                     order++;
                 } else {
-                    icons[i].style.transitionDelay = '0ms';
-                    icons[i].style.color = 'rgba(255, 187, 187, 0.1)';
-                    icons[i].style.opacity = '1';
+                    activeLayers[i].style.transitionDelay = '0ms';
+                    activeLayers[i].style.opacity = '0';
                 }
             }
         }
@@ -530,7 +377,6 @@
         function applyFilter(filter) {
             activeFilter = filter;
             activeIdx = 0;
-            generateAssignment();
             applyColors();
             renderSubtabs();
             updateLeft();
@@ -548,26 +394,7 @@
             });
         });
 
-        function scheduleWiggle() {
-            const delay = 3000 + Math.random() * 2000;
-            setTimeout(() => {
-                const count = Math.random() < 0.5 ? 1 : 2;
-                const used = new Set();
-                while (used.size < count) used.add(Math.floor(Math.random() * icons.length));
-                used.forEach((idx) => {
-                    const icon = icons[idx];
-                    if (!icon) return;
-                    icon.classList.add('user-icon-wiggle');
-                    setTimeout(() => icon.classList.remove('user-icon-wiggle'), 600);
-                });
-                scheduleWiggle();
-            }, delay);
-        }
-
         applyFilter('pohlavi');
-
-        const captureMode = (location.hash || '').indexOf('figmacapture') !== -1;
-        if (!prefersReduced && !captureMode) scheduleWiggle();
     })();
 
     /* ============== Tile badges + Show more ============== */

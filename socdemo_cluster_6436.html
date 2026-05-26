@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intent klastr 6436 – Rekonstrukce &amp; stěhování</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #170A12;
+      --color-surface: #1F1018;
+      --color-surface-2: #2A1620;
+      --color-white: #FFFFFF;
+      --color-red: #FF1E1E;
+      --color-red-dark: #CC0000;
+      --color-text: #FFFFFF;
+      --color-text-muted: #99A5B0;
+      --color-text-soft: #D8CDCD;
+      --color-card-bg: rgba(61, 40, 52, 0.8);
+      --color-baseline: rgba(255, 255, 255, 0.14);
+      --color-hairline: rgba(255, 255, 255, 0.08);
+
+      --font-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 20px;
+      --radius-xl: 24px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-base);
+      background: var(--color-bg);
+      color: var(--color-text);
+      font-size: 18px;
+      line-height: 1.5;
+      letter-spacing: -0.15px;
+      -webkit-font-smoothing: antialiased;
+      padding: 80px 32px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    /* ── HEADER ── */
+    header { margin-bottom: 56px; }
+
+    .cluster-eyebrow {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      color: var(--color-red);
+      margin-bottom: 12px;
+    }
+
+    header h1 {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      color: var(--color-text);
+      margin-bottom: 16px;
+      line-height: 1.15;
+    }
+
+    .meta {
+      font-size: 15px;
+      color: var(--color-text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .meta strong { color: var(--color-text); font-weight: 600; }
+
+    /* ── SECTIONS ── */
+    .section {
+      margin-bottom: 48px;
+      background: var(--color-card-bg);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2.5px;
+      color: var(--color-red);
+      margin-bottom: 12px;
+    }
+
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--color-hairline);
+      margin-bottom: 24px;
+    }
+
+    /* 3-column demo grid */
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 32px;
+    }
+
+    .demo-block-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.6px;
+      color: var(--color-text-soft);
+      margin-bottom: 16px;
+    }
+
+    /* ── BARS ── */
+    .bar-chart { display: flex; flex-direction: column; gap: 12px; }
+
+    .bar-row { display: flex; align-items: center; gap: 12px; }
+
+    .bar-label {
+      font-size: 14px;
+      color: var(--color-text);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .bar-label-demo {
+      width: 68px;
+      min-width: 68px;
+    }
+
+    .bar-label-interest {
+      width: 260px;
+      min-width: 260px;
+      text-align: right;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 13px;
+      color: var(--color-text-soft);
+    }
+
+    .bar-label-service {
+      width: 90px;
+      min-width: 90px;
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 20px;
+      position: relative;
+    }
+
+    .bar-track::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 1px;
+      background: var(--color-hairline);
+    }
+
+    .bar-fill.baseline {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      border-radius: 3px;
+      background: var(--color-baseline);
+      z-index: 1;
+      transition: width 0.65s cubic-bezier(.4,0,.2,1);
+    }
+
+    .bar-fill.cluster {
+      position: absolute;
+      left: 0;
+      top: 25%;
+      height: 50%;
+      border-radius: 3px;
+      background: var(--color-red);
+      z-index: 2;
+      transition: width 0.65s cubic-bezier(.4,0,.2,1);
+    }
+
+    .bar-track.tall { height: 14px; }
+
+    .bar-val {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-text);
+      white-space: nowrap;
+      width: 56px;
+      min-width: 56px;
+    }
+
+    .aff {
+      font-size: 12px;
+      color: var(--color-red);
+      font-weight: 700;
+      white-space: nowrap;
+      width: 44px;
+      min-width: 44px;
+    }
+
+    .baseline-note {
+      font-size: 13px;
+      color: var(--color-text-muted);
+      margin-top: 14px;
+    }
+
+    .bar-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-bottom: 22px;
+      align-items: center;
+    }
+    .bar-legend span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--color-text-muted);
+    }
+    .bar-legend i {
+      display: inline-block;
+      width: 22px;
+      height: 6px;
+      border-radius: 2px;
+    }
+
+    footer {
+      margin-top: 64px;
+      font-size: 13px;
+      color: var(--color-text-muted);
+      border-top: 1px solid var(--color-hairline);
+      padding-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 48px 20px; }
+      header h1 { font-size: 32px; }
+      .section { padding: 24px; }
+      .demo-grid { grid-template-columns: 1fr; gap: 24px; }
+      .bar-label-interest { width: 160px; min-width: 160px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="cluster-eyebrow">Intent klastr · ID 6436</div>
+  <h1>Rekonstrukce &amp; stěhování</h1>
+  <div class="meta">
+    <span>Perioda: <strong>2026-03</strong></span>
+    <span>Cílovka: <strong>1 050 864 identif. rusid</strong></span>
+    <span>Věk: <strong>25–59</strong> · SES: <strong>mid, high</strong></span>
+  </div>
+</header>
+
+<!-- DEMO -->
+<div class="section">
+  <div class="section-title">Demografický profil cílovky</div>
+  <hr class="section-divider">
+  <div class="bar-legend">
+    <span><i style="background:var(--color-red)"></i>cílovka</span>
+    <span><i style="background:var(--color-baseline)"></i>populace (baseline)</span>
+    <span style="margin-left:8px;">· číslo za barem = afinita (kolikrát je cílovka nad/pod průměrem populace; 1,0× = průměr)</span>
+  </div>
+  <div class="demo-grid">
+    <div class="demo-block">
+      <div class="demo-block-title">Pohlaví</div>
+      <div class="bar-chart" id="chart-sex"></div>
+    </div>
+    <div class="demo-block">
+      <div class="demo-block-title">Věk</div>
+      <div class="bar-chart" id="chart-age"></div>
+    </div>
+    <div class="demo-block">
+      <div class="demo-block-title">Socioekonomický status</div>
+      <div class="bar-chart" id="chart-ses"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOP INTERESTS -->
+<div class="section">
+  <div class="section-title">Top zájmy — nejvyšší afinita vůči populaci</div>
+  <hr class="section-divider">
+  <div class="bar-chart" id="chart-interest"></div>
+</div>
+
+<!-- TOP SHOP INTERESTS -->
+<div class="section">
+  <div class="section-title">Top nákupní zájmy — nejvyšší afinita vůči populaci</div>
+  <hr class="section-divider">
+  <div class="bar-chart" id="chart-shop"></div>
+</div>
+
+<!-- SERVICES -->
+<div class="section">
+  <div class="section-title">Zastoupení na službách — share cílovky na celkovém PV služby</div>
+  <hr class="section-divider">
+  <div class="bar-chart" id="chart-service"></div>
+  <div class="baseline-note">Baseline (celkový podíl cílovky na všech PV): 30.3 %</div>
+</div>
+
+<footer>Zdroj: dummy dataset · Metrika: share_value · Afinita: share_value / base_share_value × 100</footer>
+
+<script>
+  const COLOR = '#cc0000';
+
+  function fmt(v)   { return (v * 100).toFixed(1) + ' %'; }
+  function fmtAff(v){ return (v / 100).toFixed(1) + '×'; }
+
+  function render(id, rows, opts = {}) {
+    const {
+      labelClass = 'bar-label-demo',
+      showAff    = false,
+      tallTrack  = false,
+    } = opts;
+
+    const el = document.getElementById(id);
+
+    rows.forEach(row => {
+      const wrap = document.createElement('div');
+      wrap.className = 'bar-row';
+
+      // label
+      const lbl = document.createElement('div');
+      lbl.className = 'bar-label ' + labelClass;
+      lbl.textContent = row.l;
+      if (row.l.length > 40) lbl.title = row.l;
+
+      // single track — grey base underneath, red on top
+      const track = document.createElement('div');
+      track.className = 'bar-track' + (tallTrack ? ' tall' : '');
+
+      // grey first = behind
+      const fillBase = document.createElement('div');
+      fillBase.className = 'bar-fill baseline';
+      fillBase.style.width = '0%';
+
+      // red second = in front
+      const fillCluster = document.createElement('div');
+      fillCluster.className = 'bar-fill cluster';
+      fillCluster.style.width = '0%';
+
+      track.appendChild(fillBase);
+      track.appendChild(fillCluster);
+
+      // alias stack → track for appending below
+      const stack = track;
+
+      // value + affinity
+      const val = document.createElement('div');
+      val.className = 'bar-val';
+      val.textContent = fmt(row.v);
+
+      wrap.appendChild(lbl);
+      wrap.appendChild(stack);
+      wrap.appendChild(val);
+
+      if (showAff && row.aff != null) {
+        const aff = document.createElement('div');
+        aff.className = 'aff';
+        aff.textContent = fmtAff(row.aff);
+        wrap.appendChild(aff);
+      }
+
+      el.appendChild(wrap);
+
+      // animate — max = 1.0 (100 %) všude
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        fillCluster.style.width = Math.min(row.v   * 100, 100) + '%';
+        fillBase.style.width    = Math.min((row.base ?? 0) * 100, 100) + '%';
+      }));
+    });
+  }
+
+  // ── AGE ──
+  render('chart-age', [
+    { l: '25 – 39', v: 0.280077, base: 0.254341, aff: 110.1 },
+    { l: '40 – 59', v: 0.719923, base: 0.432359, aff: 166.5 },
+  ], { showAff: true });
+
+  // ── SEX ──
+  render('chart-sex', [
+    { l: 'Ženy', v: 0.426629, base: 0.455422, aff:  93.7 },
+    { l: 'Muži', v: 0.573371, base: 0.544578, aff: 105.3 },
+  ], { showAff: true });
+
+  // ── SOCIO ──
+  render('chart-ses', [
+    { l: 'mid',  v: 0.614586, base: 0.538427, aff: 114.1 },
+    { l: 'high', v: 0.385414, base: 0.268664, aff: 143.5 },
+  ], { showAff: true });
+
+  // ── TOP INTERESTS ──
+  render('chart-interest', [
+    { l: 'Stavba, rekonstrukce - obecné/Podlahy',                         v: 0.10862,  base: 0.031007, aff: 350.3 },
+    { l: 'Stavba, rekonstrukce - obecné/Střechy',                         v: 0.053483, base: 0.016415, aff: 325.8 },
+    { l: 'Řemesla a služby - obecné/Stěhování',                           v: 0.050281, base: 0.015678, aff: 320.7 },
+    { l: 'Stavba, rekonstrukce - obecné',                                  v: 0.692339, base: 0.218892, aff: 316.3 },
+    { l: 'Interiérové vybavení - obecné',                                  v: 0.297085, base: 0.097550, aff: 304.5 },
+    { l: 'Řemesla a služby - obecné/Řemeslníci',                          v: 0.042838, base: 0.014358, aff: 298.4 },
+    { l: 'Stavba, rekonstrukce - obecné/Vzduchotechnika, topení a klima', v: 0.068348, base: 0.023598, aff: 289.6 },
+    { l: 'Interiérové vybavení - obecné/Osvětlení',                       v: 0.039745, base: 0.013892, aff: 286.1 },
+    { l: 'Řemesla a služby - obecné',                                      v: 0.268163, base: 0.093924, aff: 285.5 },
+    { l: 'Stavba, rekonstrukce - obecné/Obklady',                         v: 0.031624, base: 0.011259, aff: 280.9 },
+  ], { labelClass: 'bar-label-interest', showAff: true });
+
+  // ── TOP SHOP INTERESTS ──
+  render('chart-shop', [
+    { l: 'Zdivo',                                           v: 0.000315, base: 0.000088, aff: 358.0 },
+    { l: 'Překlady',                                        v: 0.000419, base: 0.000118, aff: 355.1 },
+    { l: 'Příslušenství pro venkovní podlahy a dlažbu',    v: 0.001858, base: 0.000528, aff: 351.9 },
+    { l: 'Ventilace',                                       v: 0.002495, base: 0.000716, aff: 348.5 },
+    { l: 'Sádrokartonové profily',                          v: 0.007845, base: 0.002271, aff: 345.4 },
+    { l: 'Sádrokartonové desky',                            v: 0.008399, base: 0.002442, aff: 343.9 },
+    { l: 'Krbové obestavby',                                v: 0.000937, base: 0.000275, aff: 340.7 },
+    { l: 'Stropní systémy',                                 v: 0.000982, base: 0.000293, aff: 335.2 },
+    { l: 'Cihly',                                           v: 0.002738, base: 0.000817, aff: 335.1 },
+    { l: 'Jímky',                                           v: 0.000814, base: 0.000244, aff: 333.6 },
+  ], { labelClass: 'bar-label-interest', showAff: true, tallTrack: true });
+
+  // ── SERVICES (top 15 by affinity) — baseline stejná pro všechny ──
+  const SVC_BASE = 0.302907;
+  render('chart-service', [
+    { l: 'expresfm',  v: 0.430495, base: SVC_BASE, aff: 142.1 },
+    { l: 'sreality',  v: 0.416577, base: SVC_BASE, aff: 137.5 },
+    { l: 'sbazar',    v: 0.357766, base: SVC_BASE, aff: 118.1 },
+    { l: 'sauto',     v: 0.348798, base: SVC_BASE, aff: 115.2 },
+    { l: 'hp',        v: 0.338549, base: SVC_BASE, aff: 111.8 },
+    { l: 'super',     v: 0.336043, base: SVC_BASE, aff: 110.9 },
+    { l: 'sprace',    v: 0.333714, base: SVC_BASE, aff: 110.2 },
+    { l: 'onas',      v: 0.324468, base: SVC_BASE, aff: 107.1 },
+    { l: 'sobrazky',  v: 0.317171, base: SVC_BASE, aff: 104.7 },
+    { l: 'autoweb',   v: 0.314955, base: SVC_BASE, aff: 104.0 },
+    { l: 'mapy',      v: 0.312653, base: SVC_BASE, aff: 103.2 },
+    { l: 'prozeny',   v: 0.311541, base: SVC_BASE, aff: 102.9 },
+    { l: 'novinky',   v: 0.305840, base: SVC_BASE, aff: 101.0 },
+    { l: 'zbozi',     v: 0.303648, base: SVC_BASE, aff: 100.2 },
+    { l: 'pocasi',    v: 0.302364, base: SVC_BASE, aff:  99.8 },
+  ], { labelClass: 'bar-label-service', showAff: true });
+</script>
+</body>
+</html>
